@@ -1,2 +1,1 @@
-import { SIMBehaviorInspectorPanel } from './sim-behavior-inspector';
-export { SIMBehaviorInspectorPanel };
+export { SIMBehaviorInspectorPanel } from './sim-behavior-inspector';
