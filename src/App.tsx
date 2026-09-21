@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { apiClient, type ApiResponse, type ApiRoute } from './api/client';
 import './styles.css';
 
@@ -7,11 +7,12 @@ type PanelProps = { route: ApiRoute; title: string };
 function ApiPanel({ route, title }: PanelProps) {
   const [data, setData] = useState<ApiResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const refresh = useCallback(async () => {
     setLoading(true);
     setError(null);
+
     try {
       setData(await apiClient.get(route));
     } catch (cause) {
@@ -21,6 +22,10 @@ function ApiPanel({ route, title }: PanelProps) {
     }
   }, [route]);
 
+  useEffect(() => {
+    void refresh();
+  }, [refresh]);
+
   return (
     <section className="panel" aria-labelledby={`${route.slice(1)}-heading`}>
       <div className="panel-heading">
@@ -28,12 +33,14 @@ function ApiPanel({ route, title }: PanelProps) {
           <span className="eyebrow">{route}</span>
           <h2 id={`${route.slice(1)}-heading`}>{title}</h2>
         </div>
-        <button type="button" onClick={refresh} disabled={loading}>
+        <button type="button" onClick={() => void refresh()} disabled={loading}>
           {loading ? 'Loading…' : 'Refresh'}
         </button>
       </div>
       {error && <p className="error" role="alert">{error}</p>}
-      <pre className="payload">{data ? JSON.stringify(data, null, 2) : 'No data loaded.'}</pre>
+      <pre className="payload">
+        {data ? JSON.stringify(data, null, 2) : loading ? 'Loading…' : 'No data loaded.'}
+      </pre>
     </section>
   );
 }
@@ -59,10 +66,10 @@ export function WindowsPanel() {
 }
 
 export function LogsPanel() {
-  return <ApiPanel route="/autonomy" title="Logs & Autonomy" />;
+  return <ApiPanel route="/bridge" title="Logs" />;
 }
 
-export function App() {
+export default function App() {
   return (
     <main className="shell">
       <header className="hero">
