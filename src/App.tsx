@@ -44,7 +44,7 @@ export default function App() {
   const [tab, setTab] = useState<PanelId>('beMaxPortal');
   return <main className="shell">
     <ThemeToggle />
-    <header className="hero"><div><p className="eyebrow">PORTAL-OS / CONSOLE</p><h1>System surface</h1><p className="subtitle">A focused view into identity, runtime state, and kernel signals.</p></div><div className="status"><span className="status-dot" /> GUI ONLINE</div></header>
+    <header className="hero"><div><p className="eyebrow">PORTAL-OS / CONSOLE</p><h1>System surface</h1><p className="subtitle">A focused view into identity, runtime state, and kernel signals.</p></div></header>
     <Tabs value={tab} onChange={(value) => setTab(value as PanelId)} tabs={tabs} />
     <div className="panel-grid">{panels[tab]}</div>
   </main>;
