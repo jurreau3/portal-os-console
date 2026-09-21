@@ -1,0 +1,2 @@
+import type { FocusEvent, FocusNode } from './types';
+export function arrangeNodes(events: FocusEvent[]): FocusNode[] { const ids = [...new Set(events.map((e) => e.id))]; return ids.map((id, index) => { const event = events.filter((e) => e.id === id).at(-1)!; const angle = (index / Math.max(ids.length, 1)) * Math.PI * 2; return { ...event, x: 50 + Math.cos(angle) * 38, y: 50 + Math.sin(angle) * 35 }; }); }
