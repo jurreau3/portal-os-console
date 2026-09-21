@@ -1,0 +1,1 @@
+.heatmap { display: grid; grid-template-columns: repeat(8, minmax(18px, 1fr)); gap: 4px; margin-bottom: 1rem; } .heatmap span { aspect-ratio: 1; border-radius: 3px; min-width: 0; }
