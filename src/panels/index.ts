@@ -1,1 +1,1 @@
-export { IdentityModeTimelinePanel } from './identity-mode-timeline';
+export { WindowFocusGraphPanel } from './window-focus-graph';
