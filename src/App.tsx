@@ -17,16 +17,16 @@ import { SimAgentLiveMapPanel } from './panels/SimAgentLiveMapPanel';
 import { UmbrellaPolicyCompilerPanel } from './panels/UmbrellaPolicyCompilerPanel';
 import { KernelTimelinePanel } from './panels/KernelTimelinePanel';
 import { IdentitySessionInspectorPanel } from './panels/IdentitySessionInspectorPanel';
+import { KernelHeatmapPanel } from './panels/kernel-heatmap';
 import { Tabs } from './ui/Tabs';
 import { ThemeToggle } from './ui/ThemeToggle';
 import { ConsoleFrame } from './ui/console-frame';
 
 const panels = {
   health: <SystemHealthPanel />, processes: <ProcessTreePanel />, windows: <WindowManagerPanel />, agents: <SimAgentViewerPanel />,
-  umbrellaEditor: <UmbrellaRuleEditorPanel />, kernelControls: <KernelControlsPanel />,
+  umbrellaEditor: <UmbrellaRuleEditorPanel />, kernelControls: <KernelControlsPanel />, kernelHeatmap: <KernelHeatmapPanel />,
   windowLayout: <WindowLayoutVisualizerPanel />, simLiveMap: <SimAgentLiveMapPanel />, umbrellaCompiler: <UmbrellaPolicyCompilerPanel />,
-  kernelTimeline: <KernelTimelinePanel />, identityInspector: <IdentitySessionInspectorPanel />,
-  beMaxPortal: <ConsoleFrame />,
+  kernelTimeline: <KernelTimelinePanel />, identityInspector: <IdentitySessionInspectorPanel />, beMaxPortal: <ConsoleFrame />,
   identity: <IdentityPanel />, umbrella: <UmbrellaPanel />, sim: <SimPanel />, kernel: <KernelPanel />, windowsApi: <WindowsPanel />, logs: <LogsPanel />,
 };
 
@@ -34,10 +34,10 @@ type PanelId = keyof typeof panels;
 const tabs: { id: PanelId; label: string }[] = [
   { id: 'health', label: 'Health' }, { id: 'processes', label: 'Processes' }, { id: 'windows', label: 'Window Manager' },
   { id: 'agents', label: 'SIM Agents' }, { id: 'umbrellaEditor', label: 'Umbrella Rules' }, { id: 'kernelControls', label: 'Kernel Controls' },
-  { id: 'windowLayout', label: 'Live Window Layout' }, { id: 'simLiveMap', label: 'Live SIM Map' }, { id: 'umbrellaCompiler', label: 'Policy Compiler' },
-  { id: 'kernelTimeline', label: 'Kernel Timeline' }, { id: 'identityInspector', label: 'Identity Sessions' }, { id: 'beMaxPortal', label: 'BE-MAX Portal' },
-  { id: 'identity', label: 'Identity' }, { id: 'umbrella', label: 'Umbrella' }, { id: 'sim', label: 'SIM' }, { id: 'kernel', label: 'Kernel' },
-  { id: 'windowsApi', label: 'Windows API' }, { id: 'logs', label: 'Logs' },
+  { id: 'kernelHeatmap', label: 'Kernel Heatmap' }, { id: 'windowLayout', label: 'Live Window Layout' }, { id: 'simLiveMap', label: 'Live SIM Map' },
+  { id: 'umbrellaCompiler', label: 'Policy Compiler' }, { id: 'kernelTimeline', label: 'Kernel Timeline' }, { id: 'identityInspector', label: 'Identity Sessions' },
+  { id: 'beMaxPortal', label: 'BE-MAX Portal' }, { id: 'identity', label: 'Identity' }, { id: 'umbrella', label: 'Umbrella' },
+  { id: 'sim', label: 'SIM' }, { id: 'kernel', label: 'Kernel' }, { id: 'windowsApi', label: 'Windows API' }, { id: 'logs', label: 'Logs' },
 ];
 
 export default function App() {

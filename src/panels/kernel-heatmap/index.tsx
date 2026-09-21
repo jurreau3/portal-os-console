@@ -4,4 +4,49 @@ import { fetchHeatmap } from './api';
 import { toCells } from './logic';
 import type { HeatPoint, PanelState } from './types';
 import './style.css';
-export function KernelHeatmapPanel() { const [state, setState] = useState<PanelState<HeatPoint[]>>({ loading: true }); useEffect(() => { fetchHeatmap().then((data) => setState({ loading: false, data })).catch((e) => setState({ loading: false, error: e instanceof Error ? e.message : 'Request failed' })); }, []); const cells = useMemo(() => toCells(state.data ?? []), [state.data]); return <PanelCard title="Kernel Heatmap"><div className="advanced-panel">{state.loading && 'Loading…'}{state.error && <p className="error">{state.error}</p>}{state.data && <><div className="heatmap">{cells.map((cell) => <span key={cell.key} title={`${cell.process}: ${cell.pressure}`} style={{ backgroundColor: `rgba(255, ${Math.max(40, 220 - cell.pressure * 2)}, 80, ${Math.min(1, .2 + cell.pressure / 100)})` }} />)}</div><pre className="payload">{JSON.stringify(state.data, null, 2)}</pre></>}</div></PanelCard>; }
+
+export function KernelHeatmapPanel() {
+  const [state, setState] = useState<PanelState<HeatPoint[]>>({ loading: true });
+
+  useEffect(() => {
+    let active = true;
+    fetchHeatmap()
+      .then((data) => { if (active) setState({ loading: false, data }); })
+      .catch((cause) => {
+        if (active) setState({ loading: false, error: cause instanceof Error ? cause.message : 'Request failed' });
+      });
+    return () => { active = false; };
+  }, []);
+
+  const cells = useMemo(() => toCells(state.data ?? []), [state.data]);
+  const maxPressure = useMemo(() => Math.max(...cells.map((cell) => cell.pressure), 1), [cells]);
+
+  return (
+    <PanelCard title="Kernel Heatmap" eyebrow="/api/kernel/heatmap">
+      {state.loading && <p>Loading kernel pressure…</p>}
+      {state.error && <p className="error" role="alert">{state.error}</p>}
+      {state.data && (
+        <div className="heatmap-content">
+          <div className="heatmap-summary">{cells.length} process samples · peak pressure {maxPressure}</div>
+          {cells.length === 0 ? <p>No kernel samples available.</p> : (
+            <div className="heatmap" role="list" aria-label="Kernel process pressure heatmap">
+              {cells.map((cell) => (
+                <div
+                  className="heat-cell"
+                  key={cell.key}
+                  role="listitem"
+                  title={`${cell.process}: density ${cell.density}, pressure ${cell.pressure}${cell.event ? `, ${cell.event}` : ''}`}
+                  style={{ '--heat': String(cell.normalizedPressure) } as React.CSSProperties}
+                >
+                  <strong>{cell.process}</strong>
+                  <span>{cell.pressure}</span>
+                </div>
+              ))}
+            </div>
+          )}
+          <pre className="payload">{JSON.stringify(state.data, null, 2)}</pre>
+        </div>
+      )}
+    </PanelCard>
+  );
+}

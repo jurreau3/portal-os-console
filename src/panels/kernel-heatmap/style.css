@@ -1,1 +1,6 @@
-.heatmap { display: grid; grid-template-columns: repeat(8, minmax(18px, 1fr)); gap: 4px; margin-bottom: 1rem; } .heatmap span { aspect-ratio: 1; border-radius: 3px; min-width: 0; }
+.heatmap-content { display: grid; gap: .75rem; }
+.heatmap-summary { color: var(--muted); font-size: .78rem; }
+.heatmap { display: grid; gap: .5rem; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); }
+.heat-cell { background: linear-gradient(135deg, rgba(255, 70, 70, calc(.2 + var(--heat) * .65)), rgba(255, 160, 40, calc(.15 + var(--heat) * .55))); border: 1px solid rgba(255, 190, 110, calc(.2 + var(--heat) * .6)); border-radius: 8px; color: #fff; display: grid; gap: .2rem; min-height: 76px; padding: .65rem; text-shadow: 0 1px 2px #000; transition: transform .15s ease, filter .15s ease; }
+.heat-cell:hover { filter: brightness(1.2); transform: translateY(-2px); }
+.heat-cell span { font: 1.2rem/1 ui-monospace, SFMono-Regular, monospace; }
