@@ -1,0 +1,1 @@
+.identity-timeline { border-left: 2px solid var(--border); display: grid; gap: .75rem; padding-left: 1rem; } .timeline-row { align-items: center; display: grid; gap: .5rem; grid-template-columns: auto 1fr 1fr auto; } .timeline-dot { background: #6ee7ff; border-radius: 50%; box-shadow: 0 0 10px #2ae8ff; height: .55rem; width: .55rem; }
