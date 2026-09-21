@@ -4,7 +4,7 @@ import './styles.css';
 
 type PanelProps = { route: ApiRoute; title: string };
 
-function Panel({ route, title }: PanelProps) {
+function ApiPanel({ route, title }: PanelProps) {
   const [data, setData] = useState<ApiResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -38,6 +38,30 @@ function Panel({ route, title }: PanelProps) {
   );
 }
 
+export function IdentityPanel() {
+  return <ApiPanel route="/identity" title="Identity" />;
+}
+
+export function UmbrellaPanel() {
+  return <ApiPanel route="/umbrella" title="Umbrella" />;
+}
+
+export function SimPanel() {
+  return <ApiPanel route="/sim" title="SIM" />;
+}
+
+export function KernelPanel() {
+  return <ApiPanel route="/kernel" title="Kernel" />;
+}
+
+export function WindowsPanel() {
+  return <ApiPanel route="/windows" title="Windows" />;
+}
+
+export function LogsPanel() {
+  return <ApiPanel route="/autonomy" title="Logs & Autonomy" />;
+}
+
 export function App() {
   return (
     <main className="shell">
@@ -50,12 +74,12 @@ export function App() {
         <div className="status"><span className="status-dot" /> GUI ONLINE</div>
       </header>
       <div className="panel-grid">
-        <Panel route="/identity" title="Identity" />
-        <Panel route="/umbrella" title="Umbrella" />
-        <Panel route="/sim" title="SIM" />
-        <Panel route="/kernel" title="Kernel" />
-        <Panel route="/windows" title="Windows" />
-        <Panel route="/autonomy" title="Logs & Autonomy" />
+        <IdentityPanel />
+        <UmbrellaPanel />
+        <SimPanel />
+        <KernelPanel />
+        <WindowsPanel />
+        <LogsPanel />
       </div>
     </main>
   );
