@@ -1,0 +1,2 @@
+import type { IdentityEvent } from './types';
+export async function fetchTimeline(): Promise<IdentityEvent[]> { const response = await fetch('/api/identity/timeline'); if (!response.ok) throw new Error(`Identity timeline request failed (${response.status})`); const value: unknown = await response.json(); if (!Array.isArray(value)) throw new Error('Identity timeline endpoint must return an array'); return value as IdentityEvent[]; }
