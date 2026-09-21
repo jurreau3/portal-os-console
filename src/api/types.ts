@@ -60,10 +60,32 @@ export interface WindowInfo {
   z: number;
 }
 
+export interface WindowLayout {
+  id: string;
+  title: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  z: number;
+  focused: boolean;
+}
+
 export interface SimAgent {
   id: string;
   type: string;
   state: string;
+  tick: number;
+}
+
+export interface SimAgentLive {
+  id: string;
+  type: string;
+  state: string;
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
   tick: number;
 }
 
@@ -73,9 +95,40 @@ export interface UmbrellaRule {
   enabled: boolean;
 }
 
+export interface UmbrellaRuleLive {
+  id: string;
+  description: string;
+  enabled: boolean;
+  compiled: boolean;
+}
+
+export interface UmbrellaCompileResult {
+  ok: boolean;
+  errors: string[];
+  preview: string;
+}
+
 export interface KernelCommandResponse {
   ok: boolean;
   message: string;
+}
+
+export interface KernelEvent {
+  id: string;
+  type: 'spawn' | 'kill' | 'restart' | 'crash' | 'transition' | string;
+  pid?: string;
+  processName?: string;
+  timestamp: string;
+  details?: string;
+}
+
+export interface IdentitySession {
+  id: string;
+  mode: string;
+  token: string;
+  issuedAt: string;
+  expiresAt: string;
+  chain: string[];
 }
 
 export interface ApiResponseMap {
@@ -89,6 +142,7 @@ export interface ApiResponseMap {
   '/sim/agents': SimAgent[];
   '/umbrella/rules': UmbrellaRule[];
   '/umbrella/rules/:id/toggle': UmbrellaRule;
+  '/umbrella/compile': UmbrellaCompileResult;
   '/kernel/restart': KernelCommandResponse;
   '/kernel/kill/:pid': KernelCommandResponse;
   '/kernel/spawn/:name': KernelCommandResponse;
