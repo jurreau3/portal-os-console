@@ -1,0 +1,26 @@
+export interface DurablePortalState {
+  state: string;
+  intensity: number;
+  updatedAt: number;
+}
+
+export class PortalDurableStore {
+  private state: DurablePortalState = {
+    state: 'idle',
+    intensity: 0.6,
+    updatedAt: Date.now(),
+  };
+
+  getState(): DurablePortalState {
+    return { ...this.state };
+  }
+
+  updateState(next: Partial<DurablePortalState>) {
+    this.state = {
+      ...this.state,
+      ...next,
+      updatedAt: Date.now(),
+    };
+    return this.getState();
+  }
+}
