@@ -26,4 +26,8 @@ export const apiClient = {
   kernel: () => request('/kernel'),
   windows: () => request('/windows'),
   bridge: () => request('/bridge'),
+  processTree: () => request('/process-tree'),
 };
+
+// Short alias for panels and hooks that use the API as a namespace.
+export const api = apiClient;

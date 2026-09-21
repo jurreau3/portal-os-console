@@ -37,6 +37,22 @@ export interface LogsResponse extends ApiRecord {
   timestamp?: string;
 }
 
+export interface ProcessNode {
+  pid: string;
+  name: string;
+  state: 'running' | 'sleeping' | 'blocked';
+  children: ProcessNode[];
+}
+
+export interface SystemHealth {
+  identity: IdentityResponse | null;
+  umbrella: UmbrellaResponse | null;
+  sim: SimResponse | null;
+  kernel: KernelResponse | null;
+  sseOnline: boolean;
+  latencyMs: number | null;
+}
+
 export interface ApiResponseMap {
   '/identity': IdentityResponse;
   '/umbrella': UmbrellaResponse;
@@ -44,6 +60,7 @@ export interface ApiResponseMap {
   '/kernel': KernelResponse;
   '/windows': WindowsResponse;
   '/bridge': LogsResponse;
+  '/process-tree': ProcessNode[];
 }
 
 export type ApiRoute = keyof ApiResponseMap;
