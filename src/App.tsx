@@ -8,32 +8,47 @@ import { WindowsPanel } from './panels/WindowsPanel';
 import { LogsPanel } from './panels/LogsPanel';
 import { SystemHealthPanel } from './panels/SystemHealthPanel';
 import { ProcessTreePanel } from './panels/ProcessTreePanel';
+import { WindowManagerPanel } from './panels/WindowManagerPanel';
+import { SimAgentViewerPanel } from './panels/SimAgentViewerPanel';
+import { UmbrellaRuleEditorPanel } from './panels/UmbrellaRuleEditorPanel';
+import { KernelControlsPanel } from './panels/KernelControlsPanel';
 import { Tabs } from './ui/Tabs';
 import { ThemeToggle } from './ui/ThemeToggle';
 
-export default function App() {
-  const [tab, setTab] = useState('health');
-  const tabs = [
-    { id: 'health', label: 'Health' },
-    { id: 'processes', label: 'Processes' },
-    { id: 'identity', label: 'Identity' },
-    { id: 'umbrella', label: 'Umbrella' },
-    { id: 'sim', label: 'SIM' },
-    { id: 'kernel', label: 'Kernel' },
-    { id: 'windows', label: 'Windows' },
-    { id: 'logs', label: 'Logs' },
-  ];
+const panels = {
+  health: <SystemHealthPanel />,
+  processes: <ProcessTreePanel />,
+  windows: <WindowManagerPanel />,
+  agents: <SimAgentViewerPanel />,
+  umbrellaEditor: <UmbrellaRuleEditorPanel />,
+  kernelControls: <KernelControlsPanel />,
+  identity: <IdentityPanel />,
+  umbrella: <UmbrellaPanel />,
+  sim: <SimPanel />,
+  kernel: <KernelPanel />,
+  windowsApi: <WindowsPanel />,
+  logs: <LogsPanel />,
+};
 
-  const panel = {
-    health: <SystemHealthPanel />,
-    processes: <ProcessTreePanel />,
-    identity: <IdentityPanel />,
-    umbrella: <UmbrellaPanel />,
-    sim: <SimPanel />,
-    kernel: <KernelPanel />,
-    windows: <WindowsPanel />,
-    logs: <LogsPanel />,
-  }[tab as keyof typeof tabsById];
+type PanelId = keyof typeof panels;
+
+const tabs: { id: PanelId; label: string }[] = [
+  { id: 'health', label: 'Health' },
+  { id: 'processes', label: 'Processes' },
+  { id: 'windows', label: 'Window Manager' },
+  { id: 'agents', label: 'SIM Agents' },
+  { id: 'umbrellaEditor', label: 'Umbrella Rules' },
+  { id: 'kernelControls', label: 'Kernel Controls' },
+  { id: 'identity', label: 'Identity' },
+  { id: 'umbrella', label: 'Umbrella' },
+  { id: 'sim', label: 'SIM' },
+  { id: 'kernel', label: 'Kernel' },
+  { id: 'windowsApi', label: 'Windows API' },
+  { id: 'logs', label: 'Logs' },
+];
+
+export default function App() {
+  const [tab, setTab] = useState<PanelId>('health');
 
   return (
     <main className="shell">
@@ -46,19 +61,8 @@ export default function App() {
         </div>
         <div className="status"><span className="status-dot" /> GUI ONLINE</div>
       </header>
-      <Tabs value={tab} onChange={setTab} tabs={tabs} />
-      <div className="panel-grid">{panel}</div>
+      <Tabs value={tab} onChange={(value) => setTab(value as PanelId)} tabs={tabs} />
+      <div className="panel-grid">{panels[tab]}</div>
     </main>
   );
 }
-
-const tabsById = {
-  health: true,
-  processes: true,
-  identity: true,
-  umbrella: true,
-  sim: true,
-  kernel: true,
-  windows: true,
-  logs: true,
-};

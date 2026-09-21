@@ -53,6 +53,31 @@ export interface SystemHealth {
   latencyMs: number | null;
 }
 
+export interface WindowInfo {
+  id: string;
+  title: string;
+  state: 'open' | 'closed' | 'minimized';
+  z: number;
+}
+
+export interface SimAgent {
+  id: string;
+  type: string;
+  state: string;
+  tick: number;
+}
+
+export interface UmbrellaRule {
+  id: string;
+  description: string;
+  enabled: boolean;
+}
+
+export interface KernelCommandResponse {
+  ok: boolean;
+  message: string;
+}
+
 export interface ApiResponseMap {
   '/identity': IdentityResponse;
   '/umbrella': UmbrellaResponse;
@@ -61,6 +86,12 @@ export interface ApiResponseMap {
   '/windows': WindowsResponse;
   '/bridge': LogsResponse;
   '/process-tree': ProcessNode[];
+  '/sim/agents': SimAgent[];
+  '/umbrella/rules': UmbrellaRule[];
+  '/umbrella/rules/:id/toggle': UmbrellaRule;
+  '/kernel/restart': KernelCommandResponse;
+  '/kernel/kill/:pid': KernelCommandResponse;
+  '/kernel/spawn/:name': KernelCommandResponse;
 }
 
 export type ApiRoute = keyof ApiResponseMap;

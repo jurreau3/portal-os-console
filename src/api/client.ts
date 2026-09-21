@@ -4,11 +4,19 @@ export const API_BASE = 'https://planetary-max.jurreaumax.workers.dev';
 
 let bearerToken: string | undefined;
 
-async function request<Route extends ApiRoute>(route: Route): Promise<ApiResponseMap[Route]> {
+type RequestOptions = { method?: 'GET' | 'POST' };
+
+async function request<Route extends ApiRoute>(
+  route: Route,
+  options: RequestOptions = {},
+): Promise<ApiResponseMap[Route]> {
   const headers = new Headers({ Accept: 'application/json' });
   if (bearerToken) headers.set('Authorization', `Bearer ${bearerToken}`);
 
-  const response = await fetch(`${API_BASE}${route}`, { method: 'GET', headers });
+  const response = await fetch(`${API_BASE}${route}`, {
+    method: options.method ?? 'GET',
+    headers,
+  });
   if (!response.ok) throw new Error(`API request failed (${response.status})`);
   return (await response.json()) as ApiResponseMap[Route];
 }
@@ -27,7 +35,13 @@ export const apiClient = {
   windows: () => request('/windows'),
   bridge: () => request('/bridge'),
   processTree: () => request('/process-tree'),
+  windowsList: () => request('/windows'),
+  simAgents: () => request('/sim/agents'),
+  umbrellaRules: () => request('/umbrella/rules'),
+  toggleUmbrellaRule: (id: string) => request('/umbrella/rules/:id/toggle'.replace(':id', encodeURIComponent(id)) as '/umbrella/rules/:id/toggle', { method: 'POST' }),
+  kernelRestart: () => request('/kernel/restart', { method: 'POST' }),
+  kernelKillProcess: (pid: string) => request('/kernel/kill/:pid'.replace(':pid', encodeURIComponent(pid)) as '/kernel/kill/:pid', { method: 'POST' }),
+  kernelSpawnProcess: (name: string) => request('/kernel/spawn/:name'.replace(':name', encodeURIComponent(name)) as '/kernel/spawn/:name', { method: 'POST' }),
 };
 
-// Short alias for panels and hooks that use the API as a namespace.
 export const api = apiClient;
