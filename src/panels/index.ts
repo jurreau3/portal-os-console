@@ -1,1 +1,1 @@
-export { SIMBehaviorInspectorPanel } from './sim-behavior-inspector';
+export { IdentityModeTimelinePanel } from './identity-mode-timeline';
