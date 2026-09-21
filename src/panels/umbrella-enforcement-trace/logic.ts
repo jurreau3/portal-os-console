@@ -1,0 +1,2 @@
+import type { EnforcementEvent, RuleSummary } from './types';
+export function groupByRule(events: EnforcementEvent[]): RuleSummary[] { const map = new Map<string, RuleSummary>(); for (const e of events) { const current = map.get(e.ruleId) ?? { ruleId: e.ruleId, hits: 0, misses: 0, hit: false }; e.result === 'hit' ? current.hits++ : current.misses++; current.hit = current.hits > 0; map.set(e.ruleId, current); } return [...map.values()]; }
