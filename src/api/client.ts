@@ -1,14 +1,11 @@
-import type { ApiResponseMap, ApiRoute } from './types';
+import type { ApiResponseMap, ApiRoute, WindowInfo } from './types';
 
 export const API_BASE = 'https://planetary-max.jurreaumax.workers.dev';
 
 let bearerToken: string | undefined;
 type RequestOptions = { method?: 'GET' | 'POST'; body?: string };
 
-async function request<Route extends ApiRoute>(
-  route: Route,
-  options: RequestOptions = {},
-): Promise<ApiResponseMap[Route]> {
+async function request<Route extends ApiRoute>(route: Route, options: RequestOptions = {}): Promise<ApiResponseMap[Route]> {
   const headers = new Headers({ Accept: 'application/json' });
   if (options.body) headers.set('Content-Type', 'application/json');
   if (bearerToken) headers.set('Authorization', `Bearer ${bearerToken}`);
@@ -23,8 +20,12 @@ async function request<Route extends ApiRoute>(
 }
 
 export const apiClient = {
-  setBearerToken(token: string | undefined): void { bearerToken = token; },
-  get<Route extends ApiRoute>(route: Route): Promise<ApiResponseMap[Route]> { return request(route); },
+  setBearerToken(token: string | undefined): void {
+    bearerToken = token;
+  },
+  get<Route extends ApiRoute>(route: Route): Promise<ApiResponseMap[Route]> {
+    return request(route);
+  },
   identity: () => request('/identity'),
   umbrella: () => request('/umbrella'),
   sim: () => request('/sim'),
@@ -32,7 +33,7 @@ export const apiClient = {
   windows: () => request('/windows'),
   bridge: () => request('/bridge'),
   processTree: () => request('/process-tree'),
-  windowsList: () => request('/windows'),
+  windowsList: (): Promise<WindowInfo[]> => request('/windows' as ApiRoute) as Promise<WindowInfo[]>,
   simAgents: () => request('/sim/agents'),
   umbrellaRules: () => request('/umbrella/rules'),
   toggleUmbrellaRule: (id: string) => request('/umbrella/rules/:id/toggle'.replace(':id', encodeURIComponent(id)) as '/umbrella/rules/:id/toggle', { method: 'POST' }),

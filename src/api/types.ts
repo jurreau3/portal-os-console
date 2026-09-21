@@ -1,8 +1,8 @@
 export type JsonPrimitive = string | number | boolean | null;
-export type JsonValue = JsonPrimitive | JsonValue[] | { [key: string]: JsonValue };
+export type JsonValue = JsonPrimitive | JsonValue[] | { [key: string]: JsonValue | undefined };
 
 export interface ApiRecord {
-  [key: string]: JsonValue;
+  [key: string]: JsonValue | undefined;
 }
 
 export interface IdentityResponse extends ApiRecord {
@@ -136,7 +136,7 @@ export interface ApiResponseMap {
   '/umbrella': UmbrellaResponse;
   '/sim': SimResponse;
   '/kernel': KernelResponse;
-  '/windows': WindowsResponse;
+  '/windows': WindowInfo[] | WindowsResponse;
   '/bridge': LogsResponse;
   '/process-tree': ProcessNode[];
   '/sim/agents': SimAgent[];

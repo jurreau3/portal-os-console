@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import { apiClient } from '../api/client';
 import { PanelCard } from '../ui/PanelCard';
-import type { ApiRecord, ApiRoute } from '../api/types';
+import type { ApiRoute } from '../api/types';
 
 type PanelProps = { route: ApiRoute; title: string };
 
 export function ApiPanel({ route, title }: PanelProps) {
-  const [data, setData] = useState<ApiRecord | null>(null);
+  const [data, setData] = useState<unknown>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
