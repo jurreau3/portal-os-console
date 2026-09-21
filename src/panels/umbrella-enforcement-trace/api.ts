@@ -1,0 +1,2 @@
+import type { EnforcementEvent } from './types';
+export async function fetchEnforcement(): Promise<EnforcementEvent[]> { const response = await fetch('/api/umbrella/enforcement'); if (!response.ok) throw new Error(`Enforcement request failed (${response.status})`); const value: unknown = await response.json(); if (!Array.isArray(value)) throw new Error('Enforcement endpoint must return an array'); return value as EnforcementEvent[]; }
