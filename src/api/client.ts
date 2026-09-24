@@ -1,6 +1,6 @@
 import type { ApiResponseMap, ApiRoute, WindowInfo } from './types';
 
-export const API_BASE = 'https://planetary-max.jurreaumax.workers.dev';
+export const API_BASE = 'https://planetary-max.maxchaz1.workers.dev/api';
 
 let bearerToken: string | undefined;
 type RequestOptions = { method?: 'GET' | 'POST'; body?: string };
