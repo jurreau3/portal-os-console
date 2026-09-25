@@ -18,6 +18,11 @@ import { UmbrellaPolicyCompilerPanel } from './panels/UmbrellaPolicyCompilerPane
 import { KernelTimelinePanel } from './panels/KernelTimelinePanel';
 import { IdentitySessionInspectorPanel } from './panels/IdentitySessionInspectorPanel';
 import { KernelHeatmapPanel } from './panels/kernel-heatmap';
+import { StatePanel } from './panels/StatePanel';
+import { Phase11Panel } from './panels/Phase11Panel';
+import { PlanetaryModePanel } from './panels/PlanetaryModePanel';
+import { MaxOSVersionPanel } from './panels/MaxOSVersionPanel';
+import { PlanetaryControls } from './components/PlanetaryControls';
 import { Tabs } from './ui/Tabs';
 import { ThemeToggle } from './ui/ThemeToggle';
 import { ConsoleFrame } from './ui/console-frame';
@@ -28,24 +33,21 @@ const panels = {
   windowLayout: <WindowLayoutVisualizerPanel />, simLiveMap: <SimAgentLiveMapPanel />, umbrellaCompiler: <UmbrellaPolicyCompilerPanel />,
   kernelTimeline: <KernelTimelinePanel />, identityInspector: <IdentitySessionInspectorPanel />, beMaxPortal: <ConsoleFrame />,
   identity: <IdentityPanel />, umbrella: <UmbrellaPanel />, sim: <SimPanel />, kernel: <KernelPanel />, windowsApi: <WindowsPanel />, logs: <LogsPanel />,
+  state: <StatePanel />, phase11: <Phase11Panel />, planetary: <PlanetaryModePanel />, maxos: <MaxOSVersionPanel />, planetaryControls: <PlanetaryControls />,
 };
 
 type PanelId = keyof typeof panels;
 const tabs: { id: PanelId; label: string }[] = [
-  { id: 'health', label: 'Health' }, { id: 'processes', label: 'Processes' }, { id: 'windows', label: 'Window Manager' },
-  { id: 'agents', label: 'SIM Agents' }, { id: 'umbrellaEditor', label: 'Umbrella Rules' }, { id: 'kernelControls', label: 'Kernel Controls' },
-  { id: 'kernelHeatmap', label: 'Kernel Heatmap' }, { id: 'windowLayout', label: 'Live Window Layout' }, { id: 'simLiveMap', label: 'Live SIM Map' },
-  { id: 'umbrellaCompiler', label: 'Policy Compiler' }, { id: 'kernelTimeline', label: 'Kernel Timeline' }, { id: 'identityInspector', label: 'Identity Sessions' },
-  { id: 'beMaxPortal', label: 'BE-MAX Portal' }, { id: 'identity', label: 'Identity' }, { id: 'umbrella', label: 'Umbrella' },
-  { id: 'sim', label: 'SIM' }, { id: 'kernel', label: 'Kernel' }, { id: 'windowsApi', label: 'Windows API' }, { id: 'logs', label: 'Logs' },
+  { id: 'health', label: 'Health' }, { id: 'processes', label: 'Processes' }, { id: 'windows', label: 'Window Manager' }, { id: 'agents', label: 'SIM Agents' },
+  { id: 'umbrellaEditor', label: 'Umbrella Rules' }, { id: 'kernelControls', label: 'Kernel Controls' }, { id: 'kernelHeatmap', label: 'Kernel Heatmap' },
+  { id: 'windowLayout', label: 'Live Window Layout' }, { id: 'simLiveMap', label: 'Live SIM Map' }, { id: 'umbrellaCompiler', label: 'Policy Compiler' },
+  { id: 'kernelTimeline', label: 'Kernel Timeline' }, { id: 'identityInspector', label: 'Identity Sessions' }, { id: 'beMaxPortal', label: 'BE-MAX Portal' },
+  { id: 'identity', label: 'Identity' }, { id: 'umbrella', label: 'Umbrella' }, { id: 'sim', label: 'SIM' }, { id: 'kernel', label: 'Kernel' },
+  { id: 'windowsApi', label: 'Windows API' }, { id: 'logs', label: 'Logs' }, { id: 'state', label: 'State' }, { id: 'phase11', label: 'Phase 11' },
+  { id: 'planetary', label: 'Planetary Mode' }, { id: 'maxos', label: 'MaxOS Version' }, { id: 'planetaryControls', label: 'Planetary Controls' },
 ];
 
 export default function App() {
   const [tab, setTab] = useState<PanelId>('beMaxPortal');
-  return <main className="shell">
-    <ThemeToggle />
-    <header className="hero"><div><p className="eyebrow">PORTAL-OS / CONSOLE</p><h1>System surface</h1><p className="subtitle">A focused view into identity, runtime state, and kernel signals.</p></div></header>
-    <Tabs value={tab} onChange={(value) => setTab(value as PanelId)} tabs={tabs} />
-    <div className="panel-grid">{panels[tab]}</div>
-  </main>;
+  return <main className="shell"><ThemeToggle /><header className="hero"><div><p className="eyebrow">PORTAL-OS / CONSOLE</p><h1>System surface</h1><p className="subtitle">A focused view into identity, runtime state, and kernel signals.</p></div></header><Tabs value={tab} onChange={(value) => setTab(value as PanelId)} tabs={tabs} /><div className="panel-grid">{panels[tab]}</div></main>;
 }

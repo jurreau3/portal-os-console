@@ -1,11 +1,13 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { apiClient } from '../api/client';
+import { useLive } from '../hooks/useLive';
 import { PanelCard } from '../ui/PanelCard';
+import { RefreshButton } from '../components/RefreshButton';
 import type { ApiRoute } from '../api/types';
 
-type PanelProps = { route: ApiRoute; title: string };
+type PanelProps = { route: ApiRoute; title: string; interval?: number };
 
-export function ApiPanel({ route, title }: PanelProps) {
+export function ApiPanel({ route, title, interval = 2000 }: PanelProps) {
   const [data, setData] = useState<unknown>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -22,14 +24,10 @@ export function ApiPanel({ route, title }: PanelProps) {
     }
   }, [route]);
 
-  useEffect(() => { void refresh(); }, [refresh]);
+  useLive(() => void refresh(), interval);
 
   return (
-    <PanelCard title={title} eyebrow={route} actions={
-      <button type="button" onClick={() => void refresh()} disabled={loading}>
-        {loading ? 'Loading…' : 'Refresh'}
-      </button>
-    }>
+    <PanelCard title={title} eyebrow={route} actions={<RefreshButton onClick={() => void refresh()} disabled={loading} />}>
       {error && <p className="error" role="alert">{error}</p>}
       <pre className="payload">{data ? JSON.stringify(data, null, 2) : loading ? 'Loading…' : 'No data loaded.'}</pre>
     </PanelCard>
