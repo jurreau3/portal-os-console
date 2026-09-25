@@ -4,18 +4,22 @@ export interface PortalInteractionHandler {
   onEvent?: (event: string) => void;
 }
 
-export function bindInteractions<T extends { addEventListener: (type: string, handler: (event: Event) => void) => void }>(
-  target: T,
-  handlers: PortalInteractionHandler = {},
-) {
-  const onHover = () => handlers.onHover?.('hover');
-  const onClick = () => handlers.onClick?.('click');
+// IMPORTANT:
+// EventTarget is too generic.
+// We must narrow to HTMLElement so TS knows removeEventListener exists.
 
-  target.addEventListener('pointerover', onHover);
-  target.addEventListener('pointerdown', onClick);
+export function bindInteractions(
+  target: HTMLElement,
+  handlers: PortalInteractionHandler = {}
+) {
+  const onHover = () => handlers.onHover?.("hover");
+  const onClick = () => handlers.onClick?.("click");
+
+  target.addEventListener("pointerover", onHover);
+  target.addEventListener("pointerdown", onClick);
 
   return () => {
-    target.removeEventListener('pointerover', onHover);
-    target.removeEventListener('pointerdown', onClick);
+    target.removeEventListener("pointerover", onHover);
+    target.removeEventListener("pointerdown", onClick);
   };
 }
