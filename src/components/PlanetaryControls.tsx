@@ -1,30 +1,27 @@
-import { useState } from 'react';
+// src/components/PlanetaryControls.tsx
+
+import React, { useState } from 'react';
 import { api } from '../api/client';
-import { PanelCard } from '../ui/PanelCard';
+import type { PlanetaryToggleResponse } from '../api/types';
 
 export function PlanetaryControls() {
-  const [busy, setBusy] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
+  const [lastMessage, setLastMessage] = useState<string | null>(null);
 
   const toggle = async () => {
-    setBusy(true);
-    setMessage(null);
     try {
-      const result = await api.planetaryToggle();
-      setMessage(result.message ?? 'Planetary mode toggled.');
-    } catch (cause) {
-      setMessage(cause instanceof Error ? cause.message : 'Toggle request failed');
-    } finally {
-      setBusy(false);
+      const res: PlanetaryToggleResponse = await api.planetaryToggle();
+      setLastMessage(res.message);
+    } catch (e) {
+      setLastMessage(
+        e instanceof Error ? e.message : 'Failed to toggle planetary mode',
+      );
     }
   };
 
   return (
-    <PanelCard title="Planetary Controls" eyebrow="/planetary/toggle">
-      <button type="button" className="primary-action" onClick={() => void toggle()} disabled={busy}>
-        {busy ? 'Toggling…' : 'Toggle Planetary Mode'}
-      </button>
-      {message && <p className="poll-status" role="status">{message}</p>}
-    </PanelCard>
+    <div className="panel planetary-controls">
+      <button onClick={toggle}>Toggle Planetary Mode</button>
+      {lastMessage && <p>{lastMessage}</p>}
+    </div>
   );
 }
