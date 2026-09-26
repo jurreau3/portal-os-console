@@ -14,7 +14,7 @@ export function KernelControlsPanel() {
   };
 
   return (
-    <div className="kernel-controls">
+    <div className="panel kernel-controls">
       <button
         onClick={() => {
           restartKernel().then(res => {
