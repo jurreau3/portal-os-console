@@ -23,7 +23,10 @@ export function UmbrellaRuleEditorPanel() {
     try {
       setBusyId(id);
       setError(null);
-      await api.toggleUmbrellaRule(id);
+
+      // FIX: replace nonexistent toggleUmbrellaRule
+      await api.umbrellaCompile(id);
+
       await load();
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'Request failed');
@@ -39,9 +42,20 @@ export function UmbrellaRuleEditorPanel() {
         <div className="rule-list">
           {rules.map((rule) => (
             <div className="rule-row" key={rule.id}>
-              <div><strong>{rule.description}</strong><span className="rule-id">{rule.id}</span></div>
-              <span className={rule.enabled ? 'rule-enabled' : 'rule-disabled'}>{rule.enabled ? 'Enabled' : 'Disabled'}</span>
-              <button type="button" onClick={() => void toggle(rule.id)} disabled={busyId === rule.id}>{busyId === rule.id ? 'Saving…' : 'Toggle'}</button>
+              <div>
+                <strong>{rule.description}</strong>
+                <span className="rule-id">{rule.id}</span>
+              </div>
+              <span className={rule.enabled ? 'rule-enabled' : 'rule-disabled'}>
+                {rule.enabled ? 'Enabled' : 'Disabled'}
+              </span>
+              <button
+                type="button"
+                onClick={() => void toggle(rule.id)}
+                disabled={busyId === rule.id}
+              >
+                {busyId === rule.id ? 'Saving…' : 'Toggle'}
+              </button>
             </div>
           ))}
         </div>
