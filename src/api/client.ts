@@ -1,3 +1,5 @@
+// src/api/client.ts
+
 import type { ApiResponseMap, ApiRoute, WindowInfo } from './types';
 
 export const API_BASE =
@@ -28,6 +30,7 @@ export const apiClient = {
   setBearerToken(token: string | undefined): void {
     bearerToken = token;
   },
+
   get<Route extends ApiRoute>(route: Route): Promise<ApiResponseMap[Route]> {
     return request(route);
   },
@@ -41,16 +44,15 @@ export const apiClient = {
   processTree: () => request('/process-tree'),
 
   windowsList: (): Promise<WindowInfo[]> =>
-    request('/windows' as ApiRoute) as Promise<WindowInfo[]>,
+    request('/windows' as ApiRoute).then(r => r.windows),
 
   simAgents: () => request('/sim/agents'),
 
   umbrellaRules: () => request('/umbrella/rules'),
   toggleUmbrellaRule: (id: string) =>
-    request(
-      `/umbrella/rules/${encodeURIComponent(id)}/toggle` as ApiRoute,
-      { method: 'POST' }
-    ),
+    request(`/umbrella/rules/${encodeURIComponent(id)}/toggle` as ApiRoute, {
+      method: 'POST',
+    }),
 
   umbrellaCompile: (rule: string) =>
     request('/umbrella/compile', {
@@ -58,7 +60,9 @@ export const apiClient = {
       body: JSON.stringify({ rule }),
     }),
 
-  kernelRestart: () => request('/kernel/restart', { method: 'POST' }),
+  kernelRestart: () =>
+    request('/kernel/restart' as ApiRoute, { method: 'POST' }),
+
   kernelKillProcess: (pid: string) =>
     request(`/kernel/kill/${encodeURIComponent(pid)}` as ApiRoute, {
       method: 'POST',
@@ -69,7 +73,8 @@ export const apiClient = {
       method: 'POST',
     }),
 
-  planetaryToggle: () => request('/planetary/toggle', { method: 'POST' }),
+  planetaryToggle: () =>
+    request('/planetary/toggle' as ApiRoute, { method: 'POST' }),
 };
 
 export const api = apiClient;
