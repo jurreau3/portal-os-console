@@ -6,11 +6,11 @@ import type { KernelCommandResponse } from '../api/types';
 
 export function KernelControlsPanel() {
   const restartKernel = async (): Promise<KernelCommandResponse> => {
-    return api.kernelRestart();
+    return api.get('/kernel/restart') as Promise<KernelCommandResponse>;
   };
 
   const spawnProcess = async (name: string): Promise<KernelCommandResponse> => {
-    return api.kernelSpawnProcess(name);
+    return api.get(`/kernel/spawn/${encodeURIComponent(name)}` as any) as Promise<KernelCommandResponse>;
   };
 
   return (
