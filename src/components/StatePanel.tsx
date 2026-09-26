@@ -1,17 +1,27 @@
-import { useCallback, useState } from 'react';
+// src/components/StatePanel.tsx
+
+import React, { useEffect, useState } from 'react';
 import { api } from '../api/client';
-import { useLive } from '../hooks/useLive';
-import { PanelCard } from '../ui/PanelCard';
-import { RefreshButton } from './RefreshButton';
+import type { StateSnapshot } from '../api/types';
 
 export function StatePanel() {
-  const [data, setData] = useState<unknown>(null);
-  const [error, setError] = useState<string | null>(null);
-  const load = useCallback(async () => {
-    try { setData(await api.get('/state')); setError(null); } catch (cause) { setError(cause instanceof Error ? cause.message : 'Request failed'); }
+  const [snapshot, setSnapshot] = useState<StateSnapshot | null>(null);
+
+  useEffect(() => {
+    api.systemState().then(setSnapshot).catch(console.error);
   }, []);
-  useLive(() => void load());
-  return <PanelCard title="State" eyebrow="/state" actions={<RefreshButton onClick={() => void load()} />}>
-    {error && <p className="error" role="alert">{error}</p>}<pre className="payload">{data ? JSON.stringify(data, null, 2) : 'Loading…'}</pre>
-  </PanelCard>;
+
+  if (!snapshot) return <div>Loading system state…</div>;
+
+  return (
+    <div className="panel state">
+      <h2>System State Snapshot</h2>
+      <p>Kernel processes: {snapshot.kernel.processes.length}</p>
+      <p>SIM agents: {snapshot.sim.agents.length}</p>
+      <p>Umbrella rules: {snapshot.umbrella.rules.length}</p>
+      <p>Identity: {snapshot.identity.name}</p>
+      <p>Planetary mode: {snapshot.planetary.mode}</p>
+      <p>Windows: {snapshot.windows.windows.length}</p>
+    </div>
+  );
 }
