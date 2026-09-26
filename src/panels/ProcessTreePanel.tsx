@@ -1,25 +1,26 @@
-import { useEffect, useState } from 'react';
+// src/panels/ProcessTreePanel.tsx
+
+import React, { useEffect, useState } from 'react';
 import { api } from '../api/client';
 import type { ProcessNode } from '../api/types';
 import { ProcessTree } from '../ui/ProcessTree';
-import { PanelCard } from '../ui/PanelCard';
 
 export function ProcessTreePanel() {
-  const [tree, setTree] = useState<ProcessNode[] | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [root, setRoot] = useState<ProcessNode | null>(null);
 
   useEffect(() => {
-    let active = true;
-    api.processTree()
-      .then((value) => { if (active) setTree(value); })
-      .catch((cause) => { if (active) setError(cause instanceof Error ? cause.message : 'Request failed'); });
-    return () => { active = false; };
+    api.processTree().then(nodes => {
+      // pick the first node as root
+      setRoot(nodes[0]);
+    });
   }, []);
 
+  if (!root) return <div>Loading process tree…</div>;
+
   return (
-    <PanelCard title="Process Tree">
-      {error && <p className="error" role="alert">{error}</p>}
-      {!tree && !error ? 'Loading…' : tree ? <ProcessTree nodes={tree} /> : 'No process data.'}
-    </PanelCard>
+    <div className="panel process-tree">
+      <h2>Process Tree</h2>
+      <ProcessTree root={root} />
+    </div>
   );
 }
