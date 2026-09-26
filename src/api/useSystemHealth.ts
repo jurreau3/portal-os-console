@@ -1,61 +1,51 @@
+// src/api/useSystemHealth.ts
+
 import { useEffect, useState } from 'react';
 import { api } from './client';
-import { useSSE } from './useSSE';
 import type { SystemHealth } from './types';
 
-const initialHealth: SystemHealth = {
-  identity: null,
-  umbrella: null,
-  sim: null,
-  kernel: null,
-  sseOnline: false,
-  latencyMs: null,
-};
-
-export function useSystemHealth(): SystemHealth {
-  const [health, setHealth] = useState<SystemHealth>(initialHealth);
-  const kernelSSE = useSSE('/kernel');
+export function useSystemHealth() {
+  const [health, setHealth] = useState<SystemHealth | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
 
-    const load = async () => {
-      const start = performance.now();
+    async function fetchHealth() {
+      setLoading(true);
+      setError(null);
       try {
-        const [identity, umbrella, sim, kernel] = await Promise.all([
-          api.identity(),
-          api.umbrella(),
-          api.sim(),
-          api.kernel(),
-        ]);
-        if (!cancelled) {
-          setHealth({
-            identity,
-            umbrella,
-            sim,
-            kernel,
-            sseOnline: kernelSSE.online,
-            latencyMs: Math.round(performance.now() - start),
-          });
-        }
-      } catch {
-        if (!cancelled) {
-          setHealth((current) => ({
-            ...current,
-            sseOnline: kernelSSE.online,
-            latencyMs: Math.round(performance.now() - start),
-          }));
-        }
-      }
-    };
+        // Derive health from system state snapshot
+        const snapshot = await api.systemState();
+        if (cancelled) return;
 
-    void load();
-    const interval = window.setInterval(() => void load(), 5000);
+        const current: SystemHealth = {
+          kernelOk: snapshot.kernel.processes.length > 0,
+          simOk: snapshot.sim.agents.length > 0,
+          umbrellaOk: snapshot.umbrella.rules.length > 0,
+          identityOk: !!snapshot.identity.id,
+          planetaryOk: !!snapshot.planetary.mode,
+          lastCheckedAt: Date.now(),
+        };
+
+        setHealth(current);
+      } catch (e) {
+        if (cancelled) return;
+        setError(
+          e instanceof Error ? e.message : 'Failed to fetch system health',
+        );
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    fetchHealth();
+
     return () => {
       cancelled = true;
-      window.clearInterval(interval);
     };
-  }, [kernelSSE.online]);
+  }, []);
 
-  return health;
+  return { health, loading, error };
 }
