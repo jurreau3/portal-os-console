@@ -1,7 +1,7 @@
 import type { ApiResponseMap, ApiRoute, WindowInfo } from './types';
 
 export const API_BASE =
-  import.meta.env.VITE_API_BASE ?? 'http://localhost:8787/api';
+  import.meta.env.VITE_API_BASE ?? 'http://localhost:8787';
 
 let bearerToken: string | undefined;
 type RequestOptions = { method?: 'GET' | 'POST'; body?: string };
